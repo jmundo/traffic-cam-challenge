@@ -44,6 +44,9 @@ $(function() {
                 }
             });
         });
+    })
+    .fail(function() {
+        alert("Failed to retrieve camera data!");
     });
 
     google.maps.event.addListener(map, 'click', function () {
