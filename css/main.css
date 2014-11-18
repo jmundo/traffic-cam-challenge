@@ -1,3 +1,11 @@
+body {
+    background-image: url("../img/background.png");
+}
+
+header {
+    color: #FFFFFF;
+}
+
 body, input {
     font-family: 'Helvetica Neue', Helvetica, sans-serif;
     font-size: 16px;
@@ -5,11 +13,17 @@ body, input {
 }
 
 #map {
-    height: 800px;
-    margin: 0;
+    margin: 20px;
     padding: 0;
+    border: 5px solid #FFFFFF;
 }
 
 input {
-    width: 100%;
+    width: 80%;
+    padding: 5px;
+    margin-left: 20px;
+}
+
+h1 {
+    margin-left: 20px;
 }

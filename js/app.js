@@ -3,11 +3,60 @@
 
 "use strict";
 
-//put your code here to create the map, fetch the list of traffic cameras
-//and add them as markers on the map
-//when a user clicks on a marker, you should pan the map so that the marker
-//is at the center, and open an InfoWindow that displays the latest camera
-//image
-//you should also write the code to filter the set of markers when the user
-//types a search phrase into the search box
+$(function() {
+    var infowindow = new google.maps.InfoWindow;
 
+    var mapOptions = {
+        zoom: 12,
+        center: new google.maps.LatLng(47.6, -122.3)
+    };
+
+    var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+    $.getJSON('http://data.seattle.gov/resource/65fc-btcc.json', function (data) {
+
+        $.each(data, function (i, camera) {
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(camera.location.latitude, camera.location.longitude),
+                map: map,
+                imageUrl: camera.imageurl,
+                cameraLabel: camera.cameralabel,
+            });
+
+            google.maps.event.addListener(marker, 'click', function () {
+                map.panTo(marker.getPosition());
+
+                infowindow.setContent('<div>'+
+                        '<p>' + marker.cameraLabel + '</p>' +
+                        '<img src="' + marker.imageUrl.url + '" alt="camera image"/>' +
+                        '</div>');
+
+                infowindow.open(map,marker);
+            });
+
+            $('#search').bind('search keyup', function(){
+                var text = $(this).val().toLowerCase();
+
+                if(marker.cameraLabel.toLowerCase().indexOf(text) > -1){
+                    marker.setMap(map);
+                } else {
+                    marker.setMap(null);
+                }
+            });
+        });
+    });
+
+    google.maps.event.addListener(map, 'click', function () {
+        infowindow.close();
+    });
+
+    resizeMap();
+});
+
+$(window).resize(function () {
+    resizeMap();
+});
+
+function resizeMap() {
+    $('#map').css({"height": $(window).height() - $('#map').position().top - 60});
+}
